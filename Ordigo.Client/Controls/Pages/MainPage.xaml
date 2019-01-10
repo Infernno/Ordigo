@@ -1,0 +1,208 @@
+﻿<UserControl x:Class="Ordigo.Client.Controls.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewModels="clr-namespace:Ordigo.Client.Core.ViewModels"
+      xmlns:notes="clr-namespace:Ordigo.Client.Controls.Notes"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" 
+      d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="FadeProgressBar" TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <materialDesign:DrawerHost>
+        <materialDesign:DrawerHost.LeftDrawerContent>
+            <StackPanel Width="260">
+                <Button Height="140" Style="{StaticResource MaterialDesignToolButton}" Command="{Binding ChangeThemeCommand}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Image Height="150" Source="../../Assets/Images/Mountains.jpg" Stretch="Fill"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <ListView Foreground="#FF313131">
+                    <ListViewItem Height="45" Padding="0">
+                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding SyncAllNotes}"/>
+                                    <i:InvokeCommandAction Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Left}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <materialDesign:PackIcon Kind="Note" Width="20" Height="20" Foreground="Gray" Margin="5" VerticalAlignment="Center"/>
+                            <TextBlock Text="Заметки" Margin="10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="45" Padding="0">
+                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding SyncArchivedNotes}"/>
+                                    <i:InvokeCommandAction Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Left}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <materialDesign:PackIcon Kind="Archive" Width="20" Height="20" Foreground="Gray" Margin="5" VerticalAlignment="Center"/>
+                            <TextBlock  HorizontalAlignment="Left" Text="Архив" Margin="10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="45" Width="260" Padding="0">
+                        <StackPanel Orientation="Horizontal" Margin="10 0" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding ExitCommand}"/>
+                                    <i:InvokeCommandAction Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Left}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <materialDesign:PackIcon Kind="ExitToApp" Width="20" Height="20" Foreground="Gray" Margin="5" VerticalAlignment="Center"/>
+                            <TextBlock Text="Выход" Margin="10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+            </StackPanel>
+        </materialDesign:DrawerHost.LeftDrawerContent>
+        <materialDesign:ColorZone Mode="{Binding Theme}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="16" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                    <DockPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button
+                              Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                        CommandParameter="{x:Static Dock.Left}"
+                            Grid.Column="0"
+                            HorizontalAlignment="Left"
+                            Style="{DynamicResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon
+                                Kind="Menu"
+                                Width="25"
+                                Height="25" />
+                            </Button>
+
+
+                            <materialDesign:ColorZone
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        Mode="Standard"
+                        Padding="8 4 8 4"
+                        CornerRadius="2"
+                        Panel.ZIndex="1"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                    Width="*" />
+                                        <ColumnDefinition
+                                    Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button
+                                Style="{DynamicResource MaterialDesignToolButton}">
+                                    </Button>
+                                    <Button
+                                Grid.Column="0"
+                                Margin="8 0 0 0"
+                                Content="Введите сюда текст заметки..."
+                                Foreground="Black"
+                                BorderThickness="0"
+                                MinWidth="400"
+                                FontWeight="Light"
+                                VerticalAlignment="Center"
+                                Command="{Binding AddTextNoteCommand}"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                />
+                                    <Button
+                                    Command="{Binding AddToDoNoteCommand}"
+                                HorizontalAlignment="Right"
+                                Style="{DynamicResource MaterialDesignToolButton}"
+                                Grid.Column="1">
+                                        <materialDesign:PackIcon
+                                    Kind="CheckboxMultipleMarkedOutline"
+                                    Opacity=".56"
+                                    Margin="8 0 0 0" />
+                                    </Button>
+                                </Grid>
+                            </materialDesign:ColorZone>
+                            <Grid Grid.Column="2">
+                                <ProgressBar
+                                Width="25"
+                                Height="25"
+                                IsEnabled="{Binding SyncAnimation}"
+                                Style="{StaticResource FadeProgressBar}"
+                                Value="0"
+                                IsIndeterminate="True"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="Black"
+                            />
+                                <materialDesign:PackIcon
+                                Width="25"
+                                Height="25"
+                                Visibility="{Binding CloudIconVisibility, FallbackValue=Hidden}"
+                                Kind="CloudTick"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                            />
+                            </Grid>
+                        </Grid>
+                    </DockPanel>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <ListBox ItemsSource="{Binding Items}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" ></WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="viewModels:TextNoteViewModel">
+                                <notes:TextNoteControl></notes:TextNoteControl>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <materialDesign:DialogHost>
+                    </materialDesign:DialogHost>
+                    <TextBlock 
+                    Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                    Text="Пока что здесь нет заметок..."
+                    Foreground="LightGray"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding CenterLabelVisibility}"></TextBlock>
+                    <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}"/>
+                </Grid>
+            </Grid>
+        </materialDesign:ColorZone>
+
+    </materialDesign:DrawerHost>
+</UserControl>
