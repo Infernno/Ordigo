@@ -23,3 +23,10 @@ Ordigo - приложение для работы с заметками.
 * Ordigo.API - библиотека для любого клиентского приложения, представляет собой интерфейс для работы с API через C#.
 * Ordigo.Client - клиентское приложение.
 * Ordigo.Server - серверное приложение.
+
+### Скриншоты
+![Экран входа](https://raw.githubusercontent.com/Infernno/Ordigo/master/screenshots/signin.PNG)
+![Экран регистрации](https://raw.githubusercontent.com/Infernno/Ordigo/master/screenshots/signup.PNG)
+![Главный экран](https://raw.githubusercontent.com/Infernno/Ordigo/master/screenshots/mainscreen.PNG)
+![Создание заметки](https://raw.githubusercontent.com/Infernno/Ordigo/master/screenshots/addnote.PNG)
+![Сайд бар](https://raw.githubusercontent.com/Infernno/Ordigo/master/screenshots/sidebarmenu.PNG)
